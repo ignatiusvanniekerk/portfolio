@@ -4,7 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
-import {LoadersCssModule} from 'angular2-loaders-css';
+import {MdInputModule} from '@angular/material';
+import {CommonModule} from '@angular/common';
+
 
 @NgModule({
   declarations: [
@@ -13,8 +15,8 @@ import {LoadersCssModule} from 'angular2-loaders-css';
   imports: [
     BrowserModule,
     FormsModule,
-    HttpModule,
-    LoadersCssModule
+    HttpModule
+    // LoadersCssModule
   ],
   providers: [],
   bootstrap: [AppComponent]
