@@ -1,0 +1,27 @@
+.top-nav{
+  position: fixed;
+  width: 100%;
+  left: 0;
+  top: 0;
+  z-index: 100;
+  border-top: 0;
+  background-color: #909090;
+}
+
+.menu-item{
+  padding-top: 10px;
+}
+
+.menu-item a{
+  text-decoration: none;
+  color: antiquewhite;
+  padding: 10px;
+}
+.menu-headng{
+  padding-right: 10%;
+  font-weight: bold;
+}
+
+.fa-3x {
+  font-size: 2em;
+}

@@ -1,0 +1,15 @@
+.sebm-google-map-container {
+  height: 300px;
+}
+
+.change-country-btn{
+  float: left;
+  z-index: 99999999;
+  left: 2%;
+  top: 15%;
+  position: fixed;
+}
+
+md-input-container {
+  width: 100%;
+}

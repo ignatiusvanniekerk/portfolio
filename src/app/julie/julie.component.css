@@ -1,0 +1,40 @@
+.card-edges{
+  width: 30%;
+  height: 50%;
+  border-radius: 8px!important;
+  background-color: #562d56;;
+  top: 22%;
+  z-index: 99;
+  color: antiquewhite;
+  margin: auto;
+}
+
+.top-welcome{
+  background: url(./assets/background.jpeg)no-repeat;
+  background-size: cover;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  z-index: 80;
+}
+
+.overlay{
+  background-image: url(./assets/overlay.png);
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.2);
+  width: 100%;
+  position: absolute;
+  z-index: 80;
+}
+.center-text{
+  text-align: center;
+}
+md-input-container {
+  display: block;
+}
+
+.loading{
+  top: 35%;
+  position: absolute;
+  left: 30%;
+}

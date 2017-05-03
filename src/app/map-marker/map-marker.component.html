@@ -1,0 +1,29 @@
+ <button #editUserButton mdl-button mdl-button-type="raised" mdl-colored="primary"
+          class="change-country-btn"
+          mdl-ripple (click)="onDialogShow()">Change Country</button>
+
+  <mdl-dialog #editUserDialog
+              [mdl-dialog-config]="{
+              clickOutsideToClose: true,
+              styles:{'width': '300px'},
+              isModal:true,
+              openFrom: editUserButton,
+              enterTransitionDuration: 400,
+              leaveTransitionDuration: 400}">
+    <h3 class="mdl-dialog__title">Type Address:</h3>
+    <div class="mdl-dialog__content">
+      <autocomplete (valueChanged)="submitDetals($event)"></autocomplete>
+    </div>
+    <div class="mdl-dialog__actions">
+      <button mdl-button (click)="onDialogHide()" mdl-ripple>Cancel</button>
+    </div>
+  </mdl-dialog>
+
+
+<div #fontpage>
+  <sebm-google-map [latitude]="lat" [longitude]="lng" [style.height.px]="height">
+    <sebm-google-map-marker [latitude]="lat" [longitude]="lng" [label]="countryName" ></sebm-google-map-marker>
+    <sebm-google-map-marker [latitude]="item.lat" [longitude]="item.long" [label]="item.name" *ngFor='let item of items | async'></sebm-google-map-marker>
+  </sebm-google-map>
+</div>
+

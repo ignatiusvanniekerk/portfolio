@@ -1,0 +1,28 @@
+
+<md-input-container>
+  <input auto-complete
+         md-input
+         [(ngModel)]=query
+         placeholder="Enter Address(min. 2 chars)"
+         list-formatter="formatted_address"
+         path-to-data="results"
+         min-chars="2"
+         (keyup)=filter()/>
+
+</md-input-container>
+
+<div class="suggestions" *ngIf="filteredList.length > 0 && !loading">
+  <ul *ngFor='let item of filteredList'>
+    <li >
+      <a (click)="select(item)">{{item.formatted_address}}</a>
+    </li>
+  </ul>
+</div>
+
+<div class="suggestions" *ngIf="loading">
+  <ul >
+    <li >
+      <a>Loading..</a>
+    </li>
+  </ul>
+</div>

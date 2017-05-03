@@ -1,0 +1,35 @@
+<div class="top-welcome"
+     [style.height.px]="height"
+     #fontpage>
+
+  <div class="overlay"></div>
+  <md-card class="card-edges center-text">
+    <form [formGroup]="form">
+      <span  *ngIf="locationName">
+        <label>Please Enter your name:</label>
+        <md-input-container>
+          <input md-input placeholder="Name" formControlName="name" >
+        </md-input-container>
+        <br/>
+        <md-input-container *ngFor='let name of locationName'>
+          <input md-input value={{name}} disabled>
+        </md-input-container>
+        <br/>
+        <button #editUserButton mdl-button mdl-button-type="raised" mdl-colored="primary"
+                class="change-country-btn"
+                [disabled]="name.errors"
+                mdl-ripple (click)="onSubmit()">Submit</button>
+      </span>
+
+      <span *ngIf="!locationName" class="loading">
+        <i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>Locating you now..
+      </span>
+    </form>
+  </md-card>
+</div>
+
+
+
+
+
+

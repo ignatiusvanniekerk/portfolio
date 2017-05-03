@@ -1,0 +1,17 @@
+li{
+  list-style: none;
+}
+
+ul{
+  padding: 0;
+  width: 200px;
+  border-bottom: thin solid #a5a0a0;
+
+}
+ul li a{
+  color: #a5a0a0;
+}
+
+md-input-container{
+  width: 200px;
+}
