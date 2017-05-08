@@ -1,5 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 
+
+  //////////////////////////////////////////////
+  //
+  // Just as a playground feature. :)
+  //
+  //////////////////////////////////////////////
+
 @Component({
   selector: 'app-julie',
   templateUrl: './julie.component.html',

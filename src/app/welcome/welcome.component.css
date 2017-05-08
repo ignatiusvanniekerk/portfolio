@@ -10,7 +10,7 @@
 }
 
 .top-welcome{
-  background: url(./assets/background.jpeg)no-repeat;
+  background: url(./assets/img/background.jpeg)no-repeat;
   background-size: cover;
   height: 0;
   width: 100%;
@@ -19,7 +19,7 @@
 }
 
 .overlay{
-  background-image: url(./assets/overlay.png);
+  background-image: url(./assets/img/overlay.png);
   height: 100%;
   background-color: rgba(0, 0, 0, 0.2);
   width: 100%;

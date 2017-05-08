@@ -11,7 +11,8 @@
 
 </md-input-container>
 
-<div class="suggestions" *ngIf="filteredList.length > 0 && !loading">
+<div class="suggestions"
+     *ngIf="filteredList.length > 0 && !loading">
   <ul *ngFor='let item of filteredList'>
     <li >
       <a (click)="select(item)">{{item.formatted_address}}</a>
@@ -19,7 +20,8 @@
   </ul>
 </div>
 
-<div class="suggestions" *ngIf="loading">
+<div class="suggestions"
+     *ngIf="loading">
   <ul >
     <li >
       <a>Loading..</a>

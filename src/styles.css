@@ -2,3 +2,24 @@
 body{
   margin: 0;
 }
+
+.spinner{
+  height: 100%;
+  width: 100%;
+  z-index: 9999999;
+  top: 0;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  padding-top: 17%;
+  margin: 0 auto;
+  background-color: #562d56;
+  color: antiquewhite;
+  font-size: 58px;
+}
+.loading-text{
+  font-size: 29px;
+}
+

@@ -11,24 +11,68 @@ import {GoogleService} from '../../services/google.service';
 })
 export class AutocompleteComponent implements OnInit {
 
+  //////////////////////////////////////////////
+  //
+  // Public Var
+  //
+  //////////////////////////////////////////////
+
+  /**
+   *
+   * @type {string}
+   * query string from parent component
+   */
   @Input()
   public query = '';
 
+  /**
+   *
+   * @type {Array}
+   * returned rosponse from api call
+   */
   public filteredList: Array <any> = [];
 
-  public elementRef: ElementRef;
-
+  /**
+   *
+   * @type {boolean}
+   * to indicate loading if waitning for api to return values
+   */
   public loading:boolean = false;
 
+  /**
+   *
+   * @type {EventEmitter<any>}
+   * outputs a api object with the location selected to host component
+   */
   @Output()
   valueChanged: EventEmitter<any> = new EventEmitter<any>();
 
-  constructor(myElement: ElementRef,
+  /**
+   * Element ref
+   */
+  public elementRef: ElementRef;
+  ///////////////////////////////////////////////
+  //
+  //  CONSTRUCTOR
+  //
+  //////////////////////////////////////////////
+
+  constructor(private myElement: ElementRef,
               private gs: GoogleService) {
     this.elementRef = myElement;
   }
 
-  filter() {
+  ///////////////////////////////////////////////
+  //
+  //  PUBLIC METHODS
+  //
+  //////////////////////////////////////////////
+
+  /**
+   *
+   * filter method to locate posible locations of query string
+   */
+  public filter() {
     this.loading = true;
     if (this.query !== ""){
       this.gs.apiCallName(this.query).map(response => response.json())
@@ -42,13 +86,18 @@ export class AutocompleteComponent implements OnInit {
     }
   }
 
-  select(item){
+  /**
+   *
+   * @param item
+   * selected item from filtered list and emits to host component
+   */
+  public select(item){
     this.query = item.formatted_address;
     this.filteredList = [];
     this.valueChanged.emit(item);
   }
 
-  handleClick(event){
+  public handleClick(event){
     var clickedComponent = event.target;
     var inside = false;
     do {
@@ -61,6 +110,12 @@ export class AutocompleteComponent implements OnInit {
       this.filteredList = [];
     }
   }
+
+  //////////////////////////////////////////////
+  //
+  //          ANGULAR LIFE HOOKS
+  //
+  //////////////////////////////////////////////
 
   ngOnInit() {
   }

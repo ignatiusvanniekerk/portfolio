@@ -6,6 +6,12 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./full-page-spinner.component.css']
 })
 export class FullPageSpinnerComponent implements OnInit {
+  //////////////////////////////////////////////
+  //
+  // Public Var
+  //
+  //////////////////////////////////////////////
+
 
   constructor() { }
 
