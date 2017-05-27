@@ -5,6 +5,7 @@ import 'rxjs/add/operator/startWith';
 import {MdlAlertComponent, MdlDialogComponent} from 'angular2-mdl';
 import {Jsonp} from '@angular/http';
 import {forEach} from '@angular/router/src/utils/collection';
+import {Router, ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-map-marker',
@@ -59,6 +60,12 @@ export class MapMarkerComponent implements OnInit {
    */
   public items: FirebaseListObservable<any[]>;
 
+
+  /**
+   *
+   * All Objects
+   */
+  public allUsers: any;
   /**
    *
    * @type {number}
@@ -78,7 +85,7 @@ export class MapMarkerComponent implements OnInit {
    * @type {string}
    * sa as defualt
    */
-  public countryName = 'South Africa'
+  public countryName = 'South Africa';
 
   /**
    *
@@ -94,6 +101,14 @@ export class MapMarkerComponent implements OnInit {
    */
   public activeClientIP: any;
 
+
+  /**
+   *
+   * @param af
+   * @param clientIP
+   */
+  public navigationParams: any;
+
   //////////////////////////////////////////////
   //
   //          CONSTRUCTOR
@@ -101,18 +116,25 @@ export class MapMarkerComponent implements OnInit {
   //////////////////////////////////////////////
 
   constructor(af: AngularFire,
-              private clientIP: Jsonp) {
+              private clientIP: Jsonp,
+              private route: ActivatedRoute,
+              private router: Router) {
     this.items = af.database.list('/items');
+    this.items.subscribe((response)=>{
+      this.allUsers = response;
+      this.clientIP.get('//api.ipify.org/?format=jsonp&callback=JSONP_CALLBACK')
+        .subscribe(response => {
+          this.activeClientIP = response;
+          this.locateActiveUser();
+        });
+    });
+
     this.form = new FormGroup({
       'countries': this.countries
-    })
+    });
 
     //will return the active users IP adress
-    this.clientIP.get('//api.ipify.org/?format=jsonp&callback=JSONP_CALLBACK')
-      .subscribe(response => {
-        this.activeClientIP = response
-        this.locateActiveUser();
-      });
+
   }
 
   //////////////////////////////////////////////
@@ -125,6 +147,13 @@ export class MapMarkerComponent implements OnInit {
     if(this.fontpage.nativeElement){
       this.height = window.innerHeight;
     }
+
+    this.navigationParams = this.route
+      .queryParams
+      .subscribe(params => {
+        console.log('params',params)
+      });
+
   }
 
   //////////////////////////////////////////////
@@ -166,12 +195,14 @@ export class MapMarkerComponent implements OnInit {
    * last saved location.
    */
   public locateActiveUser(){
-    for (var item in this.items) {
-      console.log(item['IP'], this.activeClientIP['_body'].ip)
-      if (item['IP'] === this.activeClientIP['_body'].ip){
-        console.log(item['IP'])
-        this.lat = item['lat']
-        this.lng = item['long']
+    console.log(this.allUsers)
+    for (var i = 0; i < this.allUsers.length; i++) {
+      if (this.allUsers[i]['IP'] === this.activeClientIP['_body'].ip){
+        this.lat = this.allUsers[i]['lat'];
+        this.lng = this.allUsers[i]['long'];
+        this.countryName = this.allUsers[i]['name'];
+        console.log(this.allUsers[i])
+        this.items.remove(this.allUsers[i]['$key'])
       }
     }
   }

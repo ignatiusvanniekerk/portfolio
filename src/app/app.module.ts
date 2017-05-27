@@ -14,10 +14,10 @@ import { AgmCoreModule } from 'angular2-google-maps/core';
 import { MapMarkerComponent } from './map-marker/map-marker.component';
 import {CommonModule} from '@angular/common';
 import {MdlModule} from 'angular2-mdl';
-import {GoogleService} from '../services/google.service';
 import {Routes, RouterModule} from '@angular/router';
 import { JulieComponent } from './julie/julie.component';
 import { AutocompleteComponent } from './autocomplete/autocomplete.component';
+import {SERVICE_PROVIDERS} from '../services/service-providers';
 
 
 const appRoutes: Routes = [
@@ -56,7 +56,7 @@ const appRoutes: Routes = [
     }),
     RouterModule.forRoot(appRoutes)
   ],
-  providers: [GoogleService],
+  providers: [...SERVICE_PROVIDERS],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

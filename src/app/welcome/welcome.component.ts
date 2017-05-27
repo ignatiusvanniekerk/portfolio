@@ -134,11 +134,11 @@ export class WelcomeComponent implements OnInit {
    */
   public setPosition(position){
     setTimeout( position => this.location = position.coords, 100);
-    console.log('this.location');
     if (position['coords']) {
       this.location =position['coords'];
-      console.log(this.location);
-      this.reverseLookup();
+      this.reverseLookup().subscribe((response)=>{
+
+      });
     }
   }
 
@@ -147,23 +147,24 @@ export class WelcomeComponent implements OnInit {
    * Submits form and saves to firebase
    */
   public onSubmit(){
-    console.log('fddf');
-    this.items.push({
+    let params = {
       name: this.name.value,
       lat :this.location['latitude'],
       long: this.location['longitude'],
       IP  : this.activeClientIP['_body'].ip
-    });
+    }
+
+    this.items.push(params);
 
     this.name.setValue('');
-    this.router.navigate(['mark']);
+    this.router.navigate(['mark',{ queryParams: params}]);
   }
 
   /**
    *
    * does reverse lookup of lat and long to return Street address
    */
-  public reverseLookup(){
+  public reverseLookup(): any{
     this.gs.apiCall(this.location['latitude'], this.location['longitude'])
       .map(response => response.json())
       .subscribe((response) => {

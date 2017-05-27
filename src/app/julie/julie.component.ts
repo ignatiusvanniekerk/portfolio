@@ -22,7 +22,7 @@ export class JulieComponent implements OnInit {
 
   ngOnInit() {
     setInterval( () => {
-      let countDownDate = new Date("May 19, 2017 21:10:00").getTime();
+      let countDownDate = new Date("Jun 14, 2017 19:27:00").getTime();
       let now = new Date().getTime()
       let distance = countDownDate - now;
       let days = Math.floor(distance / (1000 * 60 * 60 * 24));

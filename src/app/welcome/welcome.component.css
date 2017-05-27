@@ -1,14 +1,3 @@
-.card-edges{
-  width: 30%;
-  height: 50%;
-  border-radius: 8px!important;
-  background-color: #562d56;;
-  top: 22%;
-  z-index: 99;
-  color: antiquewhite;
-  margin: auto;
-}
-
 .top-welcome{
   background: url(./assets/img/background.jpeg)no-repeat;
   background-size: cover;
@@ -33,8 +22,38 @@ md-input-container {
   display: block;
 }
 
-.loading{
-  top: 35%;
-  position: absolute;
-  left: 30%;
+.loader{
+  text-align: center;
+  margin: auto;
+}
+
+
+
+mdl-card{
+  width: 30%;
+  top: 15%;
+  z-index: 99;
+  color: antiquewhite;
+  margin: auto;
+}
+
+mdl-card-title{
+  height: 173px;
+  color: #fff;
+  background-color: rgb(124,77,255);
+}
+
+.mdl-card__title-text{
+  position: absolute!important;
+  font-size: 18px!important;
+}
+
+sebm-google-map {
+  height: 113px;
+  width: 100%;
+  margin-top: -24px;
+}
+
+.md-hint {
+  bottom: -1.5em!important;
 }
