@@ -4,9 +4,10 @@ import { Observable }     from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
+import {BaseDataModel} from './BaseDataModel';
 @Injectable()
 
-export class GoogleService {
+export class GoogleService extends BaseDataModel{
   /**
    *
    * @type {string}
@@ -33,7 +34,9 @@ export class GoogleService {
   //
   //
   ///////////////////////////////////////
-  constructor(private http: Http) {}
+  constructor(private http: Http) {
+    super();
+  }
 
   /**
    *

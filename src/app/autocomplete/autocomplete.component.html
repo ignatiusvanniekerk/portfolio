@@ -7,11 +7,13 @@
          list-formatter="formatted_address"
          path-to-data="results"
          min-chars="2"
+         autocomplete="off"
          (keyup)=filter()/>
 
 </md-input-container>
 
 <div class="suggestions"
+     mdl-shadow="2"
      *ngIf="filteredList.length > 0 && !loading">
   <ul *ngFor='let item of filteredList'>
     <li >

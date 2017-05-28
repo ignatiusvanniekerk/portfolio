@@ -1,20 +1,23 @@
-<div class="top-welcome"
-     [style.height.px]="height"
-     #fontpage>
+<div class="top-welcome">
 
 
-
-  <div class="loader" *ngIf="!locationName">
-    <mdl-spinner single-color active  >
-    </mdl-spinner>
-    <br>
-    Finding you now..
-  </div>
+  <mdl-card mdl-shadow="2" *ngIf="!locationName">
+    <span class="loader">
+      <mdl-spinner single-color active  >
+      </mdl-spinner>
+      <br>
+      Finding you now..
+    </span>
+  </mdl-card>
 
   <mdl-card mdl-shadow="2" *ngIf="locationName">
     <mdl-card-title>
       <sebm-google-map [latitude]="location?.latitude"
         [longitude]="location?.longitude">
+        <sebm-google-map-marker
+          [latitude]="location?.latitude"
+          [longitude]="location?.longitude"
+          [label]="'ME'" ></sebm-google-map-marker>
       </sebm-google-map>
       <h4 mdl-card-title-text>Please Enter your name:</h4>
     </mdl-card-title>
@@ -42,16 +45,7 @@
         <mdl-icon>share</mdl-icon>
       </button>
     </mdl-card-menu>
-
   </mdl-card>
 </div>
-
-
-
-lat :this.location['latitude'],
-long: this.location['longitude'],
-
-
-
 
 

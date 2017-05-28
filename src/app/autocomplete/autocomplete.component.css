@@ -15,3 +15,11 @@ ul li a{
 md-input-container{
   width: 200px;
 }
+
+.suggestions {
+  max-height: 207PX;
+  width: 220px;
+  overflow: auto;
+  background: white;
+  padding: 13px;
+}

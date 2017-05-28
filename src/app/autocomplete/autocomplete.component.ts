@@ -60,6 +60,7 @@ export class AutocompleteComponent implements OnInit {
   constructor(private myElement: ElementRef,
               private gs: GoogleService) {
     this.elementRef = myElement;
+    this.filteredList = [];
   }
 
   ///////////////////////////////////////////////
@@ -74,15 +75,19 @@ export class AutocompleteComponent implements OnInit {
    */
   public filter() {
     this.loading = true;
+    if(this.filteredList.length > 5) {
+      return
+    }
     if (this.query !== ""){
+      console.log('this.query', this.query)
       this.gs.apiCallName(this.query).map(response => response.json())
         .subscribe((response) => {
             this.loading = false;
             this.filteredList = response.results
+          console.log('this.filteredList', JSON.stringify(this.filteredList, null, 4))
           })
     }else{
       this.loading = false;
-      this.filteredList = [];
     }
   }
 

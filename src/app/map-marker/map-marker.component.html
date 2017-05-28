@@ -7,30 +7,37 @@
           (click)="onDialogShow()">
     Change Country
   </button>
+  <mdl-switch
+    *ngIf="activeUser"
+    class="change-country-switch"
+    [(ngModel)]="followME"
+    mdl-ripple>
+    Follow me {{followME ? 'Stop' : 'Continue'}}
+  </mdl-switch>
+  <h4 *ngIf="!activeUser"
+         lass="change-country-switch">
+    You have not submit as a user yet
+  </h4>
 
   <mdl-dialog #editUserDialog
               [mdl-dialog-config]="{
               clickOutsideToClose: true,
-              styles:{'width': '300px'},
+              styles:{'width': '300px', 'height':'200px'},
               isModal:true,
               openFrom: editUserButton,
               enterTransitionDuration: 400,
               leaveTransitionDuration: 400}">
+    <i class="fa fa-times"
+       aria-hidden="true"
+       style="float: right;"
+       (click)="onDialogHide()">
+    </i>
     <h3 class="mdl-dialog__title">Type Address:</h3>
 
     <div class="mdl-dialog__content">
       <autocomplete
         (valueChanged)="submitDetals($event)">
       </autocomplete>
-    </div>
-
-    <div class="mdl-dialog__actions">
-      <button
-        mdl-button
-        (click)="onDialogHide()"
-        mdl-ripple>
-        Cancel
-      </button>
     </div>
   </mdl-dialog>
 

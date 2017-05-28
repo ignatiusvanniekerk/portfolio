@@ -8,13 +8,8 @@
   background-color: #909090;
 }
 
-.menu-item{
-  /*padding-top: 10px;*/
-}
-
 .menu-item a{
   text-decoration: none;
-  color: antiquewhite;
   margin-left: 10px;
 }
 

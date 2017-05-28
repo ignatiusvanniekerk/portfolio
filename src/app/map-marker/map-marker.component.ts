@@ -1,11 +1,10 @@
 import {Component, OnInit, ElementRef, ViewChild} from '@angular/core';
-import { AngularFire, FirebaseListObservable } from 'angularfire2';
+import {FirebaseListObservable } from 'angularfire2';
 import {FormGroup, FormControl} from '@angular/forms';
 import 'rxjs/add/operator/startWith';
-import {MdlAlertComponent, MdlDialogComponent} from 'angular2-mdl';
-import {Jsonp} from '@angular/http';
-import {forEach} from '@angular/router/src/utils/collection';
-import {Router, ActivatedRoute} from '@angular/router';
+import {MdlDialogComponent} from 'angular2-mdl';
+import {FirebaseService, FBEvent} from '../../services/firebase.service';
+import {CoordinatesService, COOEvent} from '../../services/coordinates.service';
 
 @Component({
   selector: 'app-map-marker',
@@ -60,12 +59,6 @@ export class MapMarkerComponent implements OnInit {
    */
   public items: FirebaseListObservable<any[]>;
 
-
-  /**
-   *
-   * All Objects
-   */
-  public allUsers: any;
   /**
    *
    * @type {number}
@@ -96,18 +89,27 @@ export class MapMarkerComponent implements OnInit {
 
   /**
    *
-   * @type {any}
-   * the active users IP
+   * All Objects
    */
-  public activeClientIP: any;
-
+  public allUsers: any;
 
   /**
    *
-   * @param af
-   * @param clientIP
+   * Active user
    */
-  public navigationParams: any;
+  public activeUser: any;
+
+  /**
+   *
+   * follow user or check map
+   */
+  public followME: boolean = true;
+
+  /**
+   *
+   * initial Found
+   */
+  public intialFound: boolean = false;
 
   //////////////////////////////////////////////
   //
@@ -115,26 +117,37 @@ export class MapMarkerComponent implements OnInit {
   //
   //////////////////////////////////////////////
 
-  constructor(af: AngularFire,
-              private clientIP: Jsonp,
-              private route: ActivatedRoute,
-              private router: Router) {
-    this.items = af.database.list('/items');
-    this.items.subscribe((response)=>{
-      this.allUsers = response;
-      this.clientIP.get('//api.ipify.org/?format=jsonp&callback=JSONP_CALLBACK')
-        .subscribe(response => {
-          this.activeClientIP = response;
-          this.locateActiveUser();
-        });
-    });
-
+  constructor(private frb: FirebaseService,
+              private cos: CoordinatesService) {
     this.form = new FormGroup({
       'countries': this.countries
     });
-
-    //will return the active users IP adress
-
+    this.intialFound = false;
+    this.items = this.frb.items;
+    if(this.frb.allUsers){
+      this.allUsers = this.frb.allUsers
+      this.asignActiveUser(this.frb.activeClient);
+    }
+    this.frb.subscribe((event) => {
+      switch (event.kind) {
+        case FBEvent.ALL_USERS_FOUND:
+          this.allUsers = event.value.params;
+          this.frb.locateActiveUser();
+          break;
+        case FBEvent.USER_FOUND:
+          this.asignActiveUser(event.value.params);
+          break;
+      }
+    });
+    this.cos.subscribe((event) => {
+      switch (event.kind) {
+        case COOEvent.LOCATION_UPDATED:
+          if (this.followME) {
+            this.udateMakerMoving(event.value.params);
+          }
+          break;
+      }
+    });
   }
 
   //////////////////////////////////////////////
@@ -147,13 +160,6 @@ export class MapMarkerComponent implements OnInit {
     if(this.fontpage.nativeElement){
       this.height = window.innerHeight;
     }
-
-    this.navigationParams = this.route
-      .queryParams
-      .subscribe(params => {
-        console.log('params',params)
-      });
-
   }
 
   //////////////////////////////////////////////
@@ -171,6 +177,8 @@ export class MapMarkerComponent implements OnInit {
     this.lat = item.geometry.location.lat;
     this.lng = item.geometry.location.lng;
     this.countryName = item.formatted_address;
+    this.followME = false;
+
   }
 
   /**
@@ -178,7 +186,7 @@ export class MapMarkerComponent implements OnInit {
    *Shows the dialog box
    */
   public onDialogShow(){
-    this.editUserDialog.show()
+    this.editUserDialog.show();
   }
 
   /**
@@ -186,26 +194,41 @@ export class MapMarkerComponent implements OnInit {
    *hides dialog box
    */
   public onDialogHide(){
-    this.editUserDialog.close()
+    this.editUserDialog.close();
   }
 
   /**
    *
-   * locates the user thats logged in and navigates to his/her
-   * last saved location.
+   * @param user
    */
-  public locateActiveUser(){
-    console.log(this.allUsers)
-    for (var i = 0; i < this.allUsers.length; i++) {
-      if (this.allUsers[i]['IP'] === this.activeClientIP['_body'].ip){
-        this.lat = this.allUsers[i]['lat'];
-        this.lng = this.allUsers[i]['long'];
-        this.countryName = this.allUsers[i]['name'];
-        console.log(this.allUsers[i])
-        this.items.remove(this.allUsers[i]['$key'])
-      }
+  public asignActiveUser(user){
+    if (user) {
+      this.activeUser = user;
+      this.lat = user['lat'];
+      this.lng = user['long'];
+      this.countryName = user['name'];
+    }else{
+      this.followME = false;
     }
   }
 
+  /**
+   *
+   * @param newLoaction
+   */
+  public udateMakerMoving(newLoaction){
+    if (this.activeUser ) {
+      this.activeUser['lat'] = newLoaction['latitude'];
+      this.activeUser['long'] = newLoaction['longitude'];
+      this.items.update(this.activeUser['$key'], this.activeUser).then(()=>{
+        this.lat = newLoaction['latitude'];
+        this.lng = newLoaction['longitude'];
+      });
+    }else if (!this.intialFound) {
+      this.lat = newLoaction['latitude'];
+      this.lng = newLoaction['longitude'];
+      this.countryName = 'Found You';
+    }
+  }
 
 }

@@ -9,7 +9,15 @@
   top: 15%;
   position: fixed;
 }
+.change-country-switch{
+  float: left;
+  z-index: 99999999;
+  left: 2%;
+  top: 20%;
+  position: fixed;
+}
 
 md-input-container {
   width: 100%;
 }
+

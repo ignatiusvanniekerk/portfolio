@@ -1,7 +1,7 @@
 .top-welcome{
   background: url(./assets/img/background.jpeg)no-repeat;
   background-size: cover;
-  height: 0;
+  height: 100%;
   width: 100%;
   position: absolute;
   z-index: 80;
@@ -23,16 +23,24 @@ md-input-container {
 }
 
 .loader{
+  color: black;
   text-align: center;
   margin: auto;
 }
 
-
+.welcome-spinner{
+  width: 30%;
+  top: 15%;
+  z-index: 99;
+  color: antiquewhite;
+  margin: auto;
+}
 
 mdl-card{
   width: 30%;
   top: 15%;
   z-index: 99;
+  height: 495px;
   color: antiquewhite;
   margin: auto;
 }
@@ -56,4 +64,5 @@ sebm-google-map {
 
 .md-hint {
   bottom: -1.5em!important;
+  color: darkred;
 }

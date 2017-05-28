@@ -4,6 +4,9 @@ import {FirebaseListObservable, AngularFire} from 'angularfire2';
 import {GoogleService} from '../../services/google.service';
 import {Jsonp} from '@angular/http';
 import {Router} from '@angular/router';
+import {CoordinatesService, COOEvent} from '../../services/coordinates.service';
+import {FirebaseService, FBEvent} from '../../services/firebase.service';
+import {log} from 'util';
 
 @Component({
   selector: 'app-welcome',
@@ -30,6 +33,10 @@ export class WelcomeComponent implements OnInit {
    */
   public form: FormGroup;
 
+  /**
+   *
+   */
+  public userId: any;
   /**
    *
    * @type {FormControl}
@@ -68,13 +75,6 @@ export class WelcomeComponent implements OnInit {
 
   /**
    *
-   * Element ref for the front page dom
-   */
-  @ViewChild('fontpage')
-  public fontpage: ElementRef;
-
-  /**
-   *
    * browser lat and long var
    */
   public location = {};
@@ -85,20 +85,39 @@ export class WelcomeComponent implements OnInit {
   //
   //////////////////////////////////////////////
 
-  constructor(af: AngularFire,
-              private gs: GoogleService,
+  constructor(private gs: GoogleService,
+              private frb: FirebaseService,
               private router :Router,
-              private clientIP: Jsonp) {
-    this.items = af.database.list('/items');
+              private cos: CoordinatesService) {
     this.form = new FormGroup({
       'name': this.name,
       'lat': this.lat,
       'long': this.long
     });
-    this.clientIP.get('//api.ipify.org/?format=jsonp&callback=JSONP_CALLBACK')
-      .subscribe(response => {
-        this.activeClientIP = response
-      });
+    this.items = this.frb.items
+    this.cos.subscribe((event) => {
+      switch (event.kind) {
+        case COOEvent.LOCATION_UPDATED:
+          this.location = event.value.params;
+          this.reverseLookup();
+          break;
+      }
+    });
+    this.frb.subscribe((event) => {
+      switch (event.kind) {
+        case FBEvent.IP_FOUND:
+          this.activeClientIP = event.value.params;
+          this.reverseLookup();
+          break;
+        case FBEvent.ALL_USERS_FOUND:
+          this.frb.locateActiveUser();
+          break;
+        case FBEvent.USER_FOUND:
+          this.name.setValue(event.value.params['name']);
+          this.userId = event.value.params['$key']
+          break;
+      }
+    });
   }
 
   //////////////////////////////////////////////
@@ -109,15 +128,10 @@ export class WelcomeComponent implements OnInit {
 
   public ngOnInit() {
     setInterval( () => {
-      if(this.fontpage.nativeElement){
-        this.height = window.innerHeight;
+      if (!this.activeClientIP) {
+        this.activeClientIP = this.frb.activeClientIP;
       }
-    }, 1000);
-
-    if(navigator.geolocation){
-      navigator.geolocation.getCurrentPosition(this.setPosition.bind(this));
-    }
-
+    }, 10000);
   }
 
   //////////////////////////////////////////////
@@ -125,22 +139,6 @@ export class WelcomeComponent implements OnInit {
   //          PUBLIC METHODS
   //
   //////////////////////////////////////////////
-
-  /**
-   *
-   * @param position Takes the browser position in
-   * sets location.
-   *
-   */
-  public setPosition(position){
-    setTimeout( position => this.location = position.coords, 100);
-    if (position['coords']) {
-      this.location =position['coords'];
-      this.reverseLookup().subscribe((response)=>{
-
-      });
-    }
-  }
 
   /**
    *
@@ -152,29 +150,36 @@ export class WelcomeComponent implements OnInit {
       lat :this.location['latitude'],
       long: this.location['longitude'],
       IP  : this.activeClientIP['_body'].ip
+    };
+
+    if (this.userId) {
+      this.items.update(this.userId, params)
+    }else {
+      this.items.push(params);
     }
 
-    this.items.push(params);
-
     this.name.setValue('');
-    this.router.navigate(['mark',{ queryParams: params}]);
+    this.router.navigate(['mark']);
   }
 
   /**
    *
    * does reverse lookup of lat and long to return Street address
    */
-  public reverseLookup(): any{
-    this.gs.apiCall(this.location['latitude'], this.location['longitude'])
-      .map(response => response.json())
-      .subscribe((response) => {
-      if(response.results){
-        this.locationName = response.results[0].formatted_address.split(",")
-      }else {
-        this.locationName = ''
-      }
-    }, (err: any) => {
-        console.log('err',err)
-    });
+  public reverseLookup(){
+    if(!this.locationName){
+      this.gs.apiCall(this.location['latitude'], this.location['longitude'])
+        .map(response => response.json())
+        .subscribe((response) => {
+          if(response.results){
+            this.locationName = response.results[0].formatted_address.split(",")
+          }else {
+            this.locationName = ''
+          }
+        }, (err: any) => {
+          console.log('err',err)
+        });
+    }
+
   }
 }

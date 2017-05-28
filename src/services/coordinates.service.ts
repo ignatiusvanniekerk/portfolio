@@ -1,20 +1,64 @@
 import { Injectable } from '@angular/core';
+import {BaseDataModel} from './BaseDataModel';
+
+export enum COOEvent {
+  /**
+   *  Indicates location updating
+   */
+  LOCATION_UPDATED
+}
+
 
 @Injectable()
-export class CoordinatesService {
+export class CoordinatesService extends BaseDataModel{
 
-  public scope: Array<any> | boolean = false;
+  /**
+   *
+   * browser lat and long var
+   */
+  public location = {};
+
+
+  /**
+   *
+   * old location
+   */
+  public oldLocation: any;
+
+  /**
+   *
+   * new location
+   */
+  public newLocation: any;
+  //////////////////////////////////////////////
+  //
+  //          CONSTRUCTOR
+  //
+  //////////////////////////////////////////////
 
   constructor() {
+    super();
+    setInterval(()=>{
+      if(navigator.geolocation){
+        navigator.geolocation.getCurrentPosition(this.setPosition.bind(this));
+      }
+    },1000);
   }
 
-  public getScope(): Array<any> | boolean {
-    return this.scope;
+  /**
+   *
+   * @param position Takes the browser position in
+   * sets location.
+   *
+   */
+  public setPosition(position){
+    if (position['coords']) {
+      this.location = position['coords'];
+      this.newLocation = this.location;
+      if (this.oldLocation !== this.newLocation) {
+        this.emitChange(COOEvent.LOCATION_UPDATED, { params: this.location});
+        this.oldLocation = this.location;
+      }
+    }
   }
-
-  public setScope(scope: any): void {
-    this.scope = scope;
-  }
-
-
 }
