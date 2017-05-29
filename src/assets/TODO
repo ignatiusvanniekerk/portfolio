@@ -1,12 +1,17 @@
 Todo
 
-Create abstract class from lat long
+swap out firebase for mongo
 
-setInterval to get lat and long every 60 sec
+facebook and google auth to eliminate ip changes on devices
+use
+https://www.npmjs.com/package/angular2-social-login
+or research own way
 
-add comments
+research for better gps coo
 
-experiment with cdn or local copy of icons and images
+mobile friendly
+
+footer to be made smaller
 
 check out chromium and see what remote backend options
 
